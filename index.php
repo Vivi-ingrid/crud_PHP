@@ -1,10 +1,10 @@
 <?php require 'config.php';
  
-$lista = $db->query("SELECT * FROM contatos")->fetchAll();
+$lista = $db->query("SELECT * FROM jogos")->fetchAll();
  
 if(!empty($_GET['del'])){
     $id = $_GET['del'];
-    $sql = $db->prepare("DELETE FROM contatos WHERE id = :id");
+    $sql = $db->prepare("DELETE FROM jogos WHERE id = :id");
     $sql->bindValue(':id' , $id);
     $sql->execute();
     header("Location: index.php?msg=del_ok");
@@ -19,41 +19,50 @@ if(!empty($_GET['del'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Contatos</title>
+    <title>Controle de jogos</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
 </head>
  
 <body>
  
-    <nav class="navbar bg-dark navbar-dark">
+    <nav class="navbar" style="background-color: #0773ff;" data-bs-theme="dark">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 mx-auto">SISTEMA DE CONTATOS</span>
+            <span class="navbar-brand mb-0 h1 mx-auto">CONTROLE DE JOGOS</span>
         </div>
     </nav>
  
+ <div class="container">
+
+ <?php
+       
+        if(isset($_GET['msg']) && $_GET['msg'] == 'add_ok'):
+        ?>
  
-    <div class="container">
+        <div id="alert-msg" class="alert alert-success mt-4">Jogo adicionado!</div>
+ 
+        <?php endif; ?>
  
         <?php
        
         if(isset($_GET['msg']) && $_GET['msg'] == 'del_ok'):
         ?>
  
-        <div id="alert-msg" class="alert alert-danger mt-4">Contato Removido</div>
+        <div id="alert-msg" class="alert alert-danger mt-4">Jogo removido</div>
  
         <?php endif; ?>
  
-        <a href="adicionar.php" class="btn btn-secondary mt-3">Adicionar Contato</a>
+        <a href="adicionar.php" class="btn btn-outline-info mt-3">Adicionar Jogo</a>
  
         <!-- listagem inicio -->
  
         <table class="table text_center table-bordered mt-3">
             <thead class="table-light">
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">E-mail</th>
-                    <th scope="col">Ações</th>
+                    <th scope="col">Id_jogo</th>
+                    <th scope="col">Nome_jogo</th>
+                    <th scope="col">Plataforma</th>
+                    <th scope="col">Genero</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider align-middle">
@@ -62,11 +71,12 @@ if(!empty($_GET['del'])){
                 <tr>
                     <th scope="row"><?php echo $item["id"]; ?></th>
                     <td><?= $item['nome']; ?></td>
-                    <td> <?= $item['email'];?></td>
+                    <td> <?= $item['plataforma'];?></td>
+                    <td> <?= $item['genero'];?></td>
                     <td>
                             <a href="editar.php?id=<?= $item['id']; ?>" 
-                            class="btn btn-primary">Editar</a>
-                                <a href="index.php?del=<?= $item['id'] ?>" class="btn btn-danger" onclick="return confirm('Excluir?')">Excluir</a>
+                            class="btn btn-outline-info">Editar</a>
+                                <a href="index.php?del=<?= $item['id'] ?>" class="btn btn-outline-danger" onclick="return confirm('Excluir?')">Excluir</a>
  
                     </td>
                 </tr>
@@ -91,14 +101,13 @@ if(!empty($_GET['del'])){
             </div>
         </nav>
     </footer>
- 
-    <script>
-        const alertMsg = document.getElementById('alert-mgs');
+ <script>
+        const alertMsg = document.getElementById('alert-msg');
         
         if(alertMsg){
             setTimeout(() =>{
                 alertMsg.style.display = 'none';
-            },3000);
+            }, 3000);
         }
 
     </script>

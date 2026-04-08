@@ -13,41 +13,35 @@
 //         exit;
 //     }
 $nome = trim($_POST['nome'] ?? '');
-$email = trim($_POST['email'] ?? '');
+$plataforma = trim($_POST['plataforma'] ?? '');
+$genero = trim($_POST['genero'] ?? '');
 $error = '';
 
 
 
+if (!empty('$nome') && !empty($plataforma)) {
 
+    //if (filter_var($nome, FILTER_VALIDATE_DOMAIN)) 
 
-
-if (!empty('$nome') && !empty($email)) {
-
-    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-        $check = $db->prepare("SELECT id FROM contatos WHERE email = :email");
-        $check->bindValue('email', $email);
+        $check = $db->prepare("SELECT id FROM jogos WHERE nome = :nome");
+        $check->bindValue('nome', $nome);
         $check->execute();
 
 
         if ($check->rowCount() === 0) {
 
-            $sql = $db->prepare("INSERT INTO contatos (nome,email) VALUES (:nome, :email)");
+            $sql = $db->prepare("INSERT INTO jogos(nome,plataforma,genero) VALUES (:nome, :plataforma, :genero)");
             $sql->bindValue(':nome', $nome);
-            $sql->bindValue(':email', $email);
+            $sql->bindValue(':plataforma', $plataforma);
+            $sql->bindValue(':genero', $genero);
             $sql->execute();
             header("location: index.php");
             exit;
         } else {
-            $error = 'Email ja existe!';
+            $error = 'Esse jogo já está cadastrado!';
         }
-    } else {
-
-        $error = 'Email invalido!';
-    }
+    
 }
-
-
 
 ?>
 
@@ -63,35 +57,45 @@ if (!empty('$nome') && !empty($email)) {
 
 <body>
 
-    <nav class="navbar bg-dark navbar-dark">
+   <nav class="navbar" style="background-color: #0773ff;" data-bs-theme="dark">
+   
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 mx-auto">SISTEMA DE CONTATOS</span>
+            <span class="navbar-brand mb-0 h1 mx-auto">CONTROLE DE JOGOS</span>
         </div>
     </nav>
 
 
     <div class="container mt-3">
+        
+
 
         <?php if ($error): ?>
             <div class="alert alert-warning"><?= $error; ?></div>
         <?php endif; ?>
+
+
 
         <h3>Adicionar</h3>
 
 
         <form method="POST">
             <div class="mb-3">
-                <label class="form-label">Nome:</label>
+                <label class="form-label">Nome Jogo:</label>
                 <input type="text" class="form-control" name="nome"
                     required>
             </div>
             <div class="mb-3">
-                <label class="form-label">E-mail</label>
-                <input type="email" class="form-control" name="email"
+                <label class="form-label">Plataforma:</label>
+                <input type="text" class="form-control" name="plataforma"
                     required>
             </div>
-            <button type="submit" class="btn btn-primary">adicionar</button>
-            <a href="index.php" class="btn btn-secondary">Voltar</a>
+            <div class="mb-3">
+                <label class="form-label">Gênero:</label>
+                <input type="text" class="form-control" name="Gênero"
+                    required>
+            </div>
+            <button type="submit" class="btn btn-outline-info">adicionar</button>
+            <a href="index.php" class="btn btn-outline-primary">Voltar</a>
         </form>
 
 
@@ -106,7 +110,18 @@ if (!empty('$nome') && !empty($email)) {
         </nav>
     </footer>
 
+<script>
+        const alertMsg = document.getElementById('alert-msg');
+        
+        if(alertMsg){
+            setTimeout(() =>{
+                alertMsg.style.display = 'none';
+            }, 3000);
+        }
 
+    </script>
+
+    
     <script src="assets/js/bootstrap.min.js"></script>
 
 </body>

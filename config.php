@@ -1,6 +1,6 @@
 <?php
 
-    $dbname = 'crud_php';
+    $dbname = 'games';
     $host = 'localhost:4307'; 
     $dbuser = 'root';
     $dbpass = '';
@@ -12,7 +12,7 @@
     echo "Erro na conexão" . $e->getMessage();
         exit();
     }
-    define('BASE_URL','http://localhost/crud_php/')
+    define('BASE_URL','http://localhost/games/')
 
 ?>
 
